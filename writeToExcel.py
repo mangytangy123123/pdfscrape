@@ -1,4 +1,5 @@
 import openpyxl
+import os
 from openpyxl.styles.fills import PatternFill
 from openpyxl.styles import Font, colors
 
@@ -8,10 +9,11 @@ from openpyxl.styles import Font, colors
 
 class ExcelWB:
     def __init__(self) -> None:
-        self.WB = openpyxl.load_workbook("C:/Users/argex/python scripts/pdfSscaper/INCOMING1.xlsx")
+        self.WB = openpyxl.load_workbook(os.curdir +"/INCOMING1.xlsx")
         self.template = self.WB['template']
         self.sheet = None
-        self.fillColour = PatternFill(patternType='solid', fgColor=colors.Color(rgb='00FFC1C1'))
+        self.unfilledColour = PatternFill(patternType='solid', fgColor=colors.Color(rgb='00FFC1C1'))
+        self.unabletoextractColour = PatternFill(patternType='solid', fgColor=colors.Color(rgb='00ebff6a'))
         
     def getSheet(self,month, year):
         try:
@@ -25,7 +27,10 @@ class ExcelWB:
     def write(self,data,row):
         for i,v in enumerate(data):
             if v == "unfilled":
-                self.sheet.cell(row,i+1).fill = self.fillColour
+                self.sheet.cell(row,i+1).fill = self.unfilledColour
+            elif v == "unable to extract:":
+                self.sheet.cell(row,i+1).fill = self.unabletoextractColour
+                self.sheet.cell(row,i+1,value=v)
             else:
                 self.sheet.cell(row,i+1,value=v)
     

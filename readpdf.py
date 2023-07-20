@@ -1,7 +1,7 @@
 import pdfreader
 from handleIncomplete import extractIncomplete
 
-things = ['1. Full name of entity:','12. Occupation:',"13. Client's account number:",'15. ID number:']
+things = ['1. Full name of entity:','12. Occupation:',"13. Client's account number:",'15. ID number:',"11. Date of birth:","4. Other/initial: 3. Given name:"]
 
 def createPDFobj(dir):
     fd = open(dir, "rb")
@@ -30,7 +30,7 @@ def extractText(text, pdfOBJ,dir):
     infotable = []
     stuff =['External report number:','2. Date of transaction:','3. Amount of transaction:','4. Transaction currency:']
     if not "Electronic funds transfer - Incoming (EFTI)" in text[0]:
-        print(dir)
+        print(dir, "could not read")
         return ['unable to extract:',dir]
     point = text[0].index("The client ordering the EFT")
     #report summary
@@ -53,8 +53,13 @@ def extractText(text, pdfOBJ,dir):
         infotable.append(newText[newText.index("12. Occupation:")+1])
         infotable.append(newText[newText.index("14. Identifier:")+1])
         infotable.append("unfilled")
-        print(infotable)
-        return infotable
+        x = ["unfilled" if x in things else x for x in infotable]
+        print(x)
+
+        # plastem packaging edge case:
+        # if no beneficary given and surname, then check full name of entity
+        # or if no beneficary name then use ordering client information
+        return x
  
 
     #client info
@@ -76,6 +81,6 @@ def extractText(text, pdfOBJ,dir):
 
     infotable.append(clientSlice[clientSlice.index("15. ID number:")+1])
 
-    print(infotable)
-
-    return ["unfilled" if x in things else x for x in infotable]
+    filtered = ["unfilled" if x in things else x for x in infotable]
+    print(filtered)
+    return filtered
