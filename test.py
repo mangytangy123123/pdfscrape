@@ -1,17 +1,13 @@
 import pdfreader
 from openpyxl import load_workbook
-from pdfreader import PDFDocument, SimplePDFViewer
-import os
-from os import listdir
-from os.path import isfile, join
+from pdfreader import SimplePDFViewer
 
-testdir = "C:/Users/lawre.DESKTOP-SCR7VIT/Documents/python/pdfs/NOV/3 NOV/BAYAT-ASHNA.pdf"
-pdfFileObj = open(testdir, 'rb')
-doc = SimplePDFViewer(pdfFileObj)
+fd = open("C:/Users/lawrence/projects/pdfScraper/pdfs/2022/OCT/3 OCT/AHMADIAN-AZIMI.pdf", 'rb')
 
-table = ["sefdsfseoj woeirjeioj jo op"]
+viewer = SimplePDFViewer(fd)
+viewer.navigate(2); viewer.render()
+page = viewer.canvas.strings
 
-if "lol" in table:
-    print("found")
-else:
-    print('not found')
+print(page[page.index("15. ID number:")+1])
+print(page[page.index("11. Date of birth:")+1])
+
